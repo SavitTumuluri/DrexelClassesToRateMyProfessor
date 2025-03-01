@@ -68,10 +68,10 @@ label {
 }
 
 header {
-    background-color: #333;
+    background: linear-gradient(to right, #1a237e, #e3c205);  /* Dark blue to golden yellow */
     color: white;
     text-align: center;
-    padding: 1rem;
+    padding: 2px;
 }
 
 /* Main content area */
