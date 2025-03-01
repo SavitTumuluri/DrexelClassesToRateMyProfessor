@@ -10,7 +10,21 @@ body {
     flex: 1;
 }
 
-.left-section, .center-section, .right-section {
+.left-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-left: 50px;
+    padding-left: 50px;
+}
+
+.center-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.right-section {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -23,11 +37,12 @@ body {
 .term-selector {
     width: 100%;
     margin: 10px;
-    max-width: 300px;  /* Adjust this value as needed */
+    max-width: 500px;  /* Adjust this value as needed */
 }
 
 .class-history {
     width: 100%;
+    margin-top: 10px;
     display: flex;
     flex-direction: column;
 }
@@ -86,11 +101,11 @@ header {
 }
 
 .credit-input {
-    margin-top: 20px;
+    margin: 10px;  /* Match major-selector margin */
+    flex: 1;       /* Match major-selector flex */
     display: flex;
     flex-direction: column;
     gap: 8px;
-    margin-left: 10px;
 }
 
 .credit-input input {
@@ -114,7 +129,7 @@ header {
 }
 
 .submit-container {
-    margin-top: 80px;
+    margin-top: 10px;
 }
 
 #submit-btn {
