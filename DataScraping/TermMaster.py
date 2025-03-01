@@ -21,8 +21,10 @@ def extractClasses(table):
         cells = row.find_elements(By.TAG_NAME, "td")
         if cells:
             row_data = [cell.text.strip() for cell in cells]
-            rows.append(row_data)
+            if len(row_data) > 5:
+                rows.append(row_data)
     return rows
+
 # Print or process the data
     '''
     print("Headers:", headers)
