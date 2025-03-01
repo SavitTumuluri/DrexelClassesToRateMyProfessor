@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 import time
+import json
 import DrexelSignIn
 import Class
 import TermMaster
@@ -53,6 +54,8 @@ for current in classes:
     newClass = Class.Class(subjectCode=subjectCode, classType=classType, method=method, section=section, crn=crn, name=name, date=date, classTime=classTime, professor=professor)
     list_of_classes.append(newClass)
 
+json_data = json.dumps([eachClass.__dict__ for eachClass in list_of_classes], indent=4)
+print(json_data)
 
 
 # Close the WebDriver
