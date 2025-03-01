@@ -1,0 +1,6 @@
+Course,Professor,Rating,Workload,Attendance,Semester,Credits
+STAT 3503,Dr. Smith,4.5,test,True,Fall,3
+CS 101,Dr. Johnson,3.8,homework,False,Fall,4
+CS 201,Dr. Brown,4.2,test,True,Spring,3
+MATH 200,Dr. Lee,4.8,homework,False,Fall,3
+STAT 4000,Dr. Green,4.0,test,True,Spring,3
