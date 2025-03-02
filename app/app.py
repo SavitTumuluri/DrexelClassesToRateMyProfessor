@@ -61,7 +61,7 @@ def home():
         # Pass the hardcoded classes and professors for POST requests
         return render_template('index.html', result=result, classes=classes, professors=professors)
     
-    # For GET requests, pass an empty list for classes and professors
+    # For GET requests, pass empty lists for classes and professors
     return render_template('index.html', result=None, classes=[], professors=[])
 
 

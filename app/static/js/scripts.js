@@ -18,24 +18,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Add this to your existing handleSubmit function in scripts.js
     async function handleSubmit(e) {
         e.preventDefault(); // Prevent default form submission
-    
+        
         if (!validateCredits()) {
             alert('Please enter a credit value between 12.0 and 20.0');
             return;  // Stop submission if credits are invalid
         }
-    
+        
         // Show loading overlay
         const loadingOverlay = document.getElementById('loading-overlay');
         loadingOverlay.classList.remove('hidden');
-    
+        
         // Simulate processing time (3 seconds)
         setTimeout(() => {
             // Get the form element
             const form = document.querySelector('form');
-        
+            
             // Submit the form
             form.submit();
         }, 3000); // 3 seconds delay
