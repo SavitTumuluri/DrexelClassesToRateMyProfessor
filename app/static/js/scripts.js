@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        if (credits < 12 || credits > 20) {
+        if (credits < 12.0 || credits > 20.0) {
             creditInput.classList.add('invalid');
         } else {
             creditInput.classList.remove('invalid');
