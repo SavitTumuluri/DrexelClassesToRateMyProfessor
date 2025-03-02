@@ -2,8 +2,11 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
+from bs4 import BeautifulSoup
 import time
-import json
+import re
+import Course
+import RateMyProfessor
 import DrexelSignIn
 import Class
 import TermMaster
@@ -11,7 +14,38 @@ import TermMaster
 # Set up Chrome options (optional)
 chrome_options = Options()
 
-list_of_classes = []
+
+def ExtractCourseInfo(driver, url):
+    driver.get(url)
+    searchbox = driver.find_element(By.ID, "fssearchresults")
+    courseHead = searchbox.find_element(By.TAG_NAME, "h2")
+    courseInfo = courseHead.text.strip()
+    ParseCourseInfo(searchbox.get_attribute('innerHTML'))
+
+def ParseCourseInfo(courseInfo):
+    soup = BeautifulSoup(courseInfo, "html.parser")
+
+    # Extract Course Title
+    course_title = soup.find("h2").text.strip()
+    match = re.match(r"(\w+)\s*(\d+)\s*(.+)\s*(\d+\.\d+)\s*Credits", course_title)
+    newCourse = Course.Course()
+    if match:
+        newCourse.SetAbbr(match.group(1) + match.group(2)) # CS
+        #course_number = match.group(2)  # 260
+        newCourse.SetName(match.group(3).strip())  # Data Structures
+        newCourse.SetHours(match.group(4))  # 4.0
+
+    # Extract Restrictions
+    prerequisites = None
+    for b_tag in soup.find_all("b"):
+        if "Prerequisites" in b_tag.text:
+            prerequisites = b_tag.next_sibling.strip()
+    newCourse.SetPrerequisite(prerequisites)
+
+    print(newCourse.__dict__)
+
+    
+
 
 # Path to your ChromeDriver
 chrome_driver_path = "C:/Users/Serena Osuagwu/Downloads/chromedriver-win64/chromedriver-win64/chromedriver.exe"
@@ -32,31 +66,19 @@ time.sleep(5)
 # Locate the table by its ID
 table = driver.find_element(By.ID, "sortableTable")
 
-classes = TermMaster.extractClasses(table=table)
+termMasterInstance = TermMaster.TermMaster(table)
+driver.quit()
 
-for current in classes:
-    subjectCode = current[0] + current[1]
-    classType = current[2]
-    method = current[3]
-    section = current[4]
-    crn = current[5]
-    name = current[6]
-    splitDate = current[7].split(" ", 1)
-    
-    if (len(splitDate) > 1):
-        date = splitDate[0]
-        timesplit = splitDate[1].split('\n')
-        classTime = timesplit[0]
-    else :
-        date = splitDate[0]
-        classTime = splitDate[0]
-    professor = current[8]
-    newClass = Class.Class(subjectCode=subjectCode, classType=classType, method=method, section=section, crn=crn, name=name, date=date, classTime=classTime, professor=professor)
-    list_of_classes.append(newClass)
+newService = Service(chrome_driver_path)
+newDriver = webdriver.Chrome(service=service, options=chrome_options)
+classes_json = termMasterInstance.ExtractClasses()
+for courseNumber in termMasterInstance.coursesNumber:
+    catalogurl = f"https://catalog.drexel.edu/search/?P={courseNumber}"
+    ExtractCourseInfo(driver=newDriver, url=catalogurl)
 
-json_data = json.dumps([eachClass.__dict__ for eachClass in list_of_classes], indent=4)
-print(json_data)
+'''professor_json = RateMyProfessor.GetProfessors()
+print(professor_json)'''
 
 
 # Close the WebDriver
-driver.quit()
+newDriver.quit()
