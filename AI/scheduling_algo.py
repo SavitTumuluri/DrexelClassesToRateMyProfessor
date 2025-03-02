@@ -1,4 +1,10 @@
 import datetime
+import nltk
+from nltk.sentiment import SentimentIntensityAnalyzer
+
+# Download the Vader lexicon if not already present.
+nltk.download('vader_lexicon')
+sia = SentimentIntensityAnalyzer()
 
 def check_prerequisites(course_prereqs, completed_courses):
     """
@@ -19,11 +25,21 @@ def check_prerequisites(course_prereqs, completed_courses):
 
 def calculate_score(professor_rating, comment, user_tags):
     """
-    Compute score as the sum of the professor's rating and the number of user-supplied keywords
-    found in the professor's comment (case-insensitive).
+    Compute the overall score for a course by combining:
+      - The professor's numeric rating.
+      - The count of user-supplied keywords (from user_tags) found in the professor's comment.
+      - The compound sentiment score from Vader analysis of the professor's comment.
+    
+    The compound sentiment score is in the range [-1, 1] (with positive being more positive).
     """
+    # Analyze sentiment from the professor's comment
+    sentiment_compound = sia.polarity_scores(comment)['compound']
+    
+    # Count how many user tags appear in the comment (case-insensitive)
     match_count = sum(1 for tag in user_tags if tag.lower() in comment.lower())
-    return professor_rating + match_count
+    
+    # Return the combined score. You can adjust weighting factors if needed.
+    return professor_rating + match_count + sentiment_compound
 
 def parse_time(time_str):
     """Parse a time string like '09:00 am' into a datetime.time object."""
@@ -58,7 +74,8 @@ def sections_conflict(sec1, sec2):
 def group_course_packages(courses):
     """
     Group course sections by their course code.
-    Sections that share the same code (and thus represent lectures, labs, recitations) will be combined.
+    Sections that share the same code (and thus represent lectures, labs, recitations)
+    are combined into a single package.
     """
     packages = {}
     for course in courses:
@@ -73,7 +90,7 @@ def group_course_packages(courses):
 def package_score(package, professors, user_tags):
     """
     Calculate the overall score for a package.
-    We prefer to use the lecture section (if available) to determine the professor's rating and comment.
+    We prefer the lecture section (if available) to determine the professor's review details.
     """
     main_section = None
     for sec in package:
@@ -102,7 +119,7 @@ def package_conflicts(pkg, scheduled_packages):
 def schedule_courses(courses, professors, user_tags, completed_courses):
     """
     Build a final schedule by:
-      1. Filtering out courses that are already completed or that fail prerequisites.
+      1. Filtering out courses already completed or that fail prerequisites.
       2. Grouping sections into course packages (automatically considering attached labs/recitations).
       3. Sorting packages by score (higher score is prioritized).
       4. Adding packages one by one if none of their sections conflict with already scheduled packages.
@@ -126,7 +143,7 @@ def schedule_courses(courses, professors, user_tags, completed_courses):
     # 3. Sort packages by their calculated score (using the main lecture's professor review)
     packages.sort(key=lambda pkg: package_score(pkg, professors, user_tags), reverse=True)
     
-    # 4. Add packages to the final schedule if they do not conflict with already scheduled sections
+    # 4. Build the final schedule by adding packages that don't conflict with already scheduled ones
     final_schedule = []
     for pkg in packages:
         if not package_conflicts(pkg, final_schedule):
@@ -180,6 +197,6 @@ if __name__ == "__main__":
     for pkg in final_schedule:
         code = pkg[0].get('course_code') or pkg[0].get('SubjectCode')
         score = package_score(pkg, professors, user_tags)
-        print(f"\nCourse: {code} (Score: {score})")
+        print(f"\nCourse: {code} (Score: {score:.2f})")
         for sec in pkg:
             print(f"  Type: {sec.get('ClassType')}, Day: {sec.get('WeekDay')}, Time: {sec.get('ClassTime')}, Professor: {sec.get('Professor')}")
