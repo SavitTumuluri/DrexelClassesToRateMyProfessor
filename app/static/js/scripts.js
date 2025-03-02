@@ -1,4 +1,7 @@
 async function handleSubmit() {
+    if (!validateCredits()) {
+        return;  // Stop submission if credits are invalid
+    }
     // Get values from all inputs
     const selectedMajor = document.getElementById('major-select').value;
     const selectedTerm = document.getElementById('term-select').value;
@@ -102,8 +105,11 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (credits < 12.0 || credits > 20.0) {
             creditInput.classList.add('invalid');
+            alert('Please enter a credit value between 12.0 and 20.0');
+            return false;
         } else {
             creditInput.classList.remove('invalid');
+            return true;
         }
     }
     
