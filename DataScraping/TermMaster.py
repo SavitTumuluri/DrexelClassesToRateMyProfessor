@@ -72,6 +72,8 @@ class TermMaster:
         list_of_professors = set()
         for currentClass in rows:
             possibleProfessor = currentClass[10]
+            if ("Dec" in possibleProfessor):
+                possibleProfessor = currentClass[12]
             if (possibleProfessor != None or possibleProfessor.lower() != "tbd"):
                 list_of_professors.add(possibleProfessor)
         
