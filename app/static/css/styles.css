@@ -279,3 +279,11 @@ body {
     height: auto;
     margin: 10px 0;
 }
+ .class-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 10px;
+    background: white;
+ }
