@@ -13,39 +13,43 @@
     </header>
 
     <main class="main-content">
+        <div id="loading-overlay" class="loading-overlay hidden">
+            <div class="loading-spinner"></div>
+            <p>Generating your optimal schedule...</p>
+        </div>
         <div class="left-section">
-            <div class="major-selector form-group">
-                <label for="major-select">Choose a major:</label>
-                <select id="major-select" name="major">
-                    <option value="">Select Major</option>
-                    <option value="cs">Computer Science</option>
-                    <option value="ds">Data Science</option>
-                    <option value="se">Software Engineering</option>
-                </select>
-            </div>
+            <form method="POST" action="/">
+                <div class="major-selector form-group">
+                    <label for="major-select">Choose a major:</label>
+                    <select id="major-select" name="major">
+                        <option value="">Select Major</option>
+                        <option value="cs">Computer Science</option>
+                        <option value="ds">Data Science</option>
+                        <option value="se">Software Engineering</option>
+                    </select>
+                </div>
 
-            <div class="term-selector form-group">
-                <label for="term-select">Choose a Term:</label>
-                <select id="term-select" name="term">
-                    <option value="">Select Term</option>
-                    <option value="fa">Fall</option>
-                    <option value="wn">Winter</option>
-                    <option value="sp">Spring</option>
-                    <option value="su">Summer</option>
-                </select>
-            </div>
+                <div class="term-selector form-group">
+                    <label for="term-select">Choose a Term:</label>
+                    <select id="term-select" name="term">
+                        <option value="">Select Term</option>
+                        <option value="fa">Fall</option>
+                        <option value="wn">Winter</option>
+                        <option value="sp">Spring</option>
+                        <option value="su">Summer</option>
+                    </select>
+                </div>
 
-            <div class="credit-input">
-                <label for="credit-limit">Credit Hours:</label>
-                <input type="number" 
+                <div class="credit-input">
+                    <label for="credit-limit">Credit Hours:</label>
+                    <input type="number" 
                        id="credit-limit" 
                        name="credits"
                        min="1" 
                        max="20" 
                        placeholder="Credit Hours"
                        required>
-            </div>
-            <form method="POST">
+                </div>
                 <div class="class-history">
                     <div class="history-header">
                         <label for="history-input">Past Class History:</label>
@@ -63,28 +67,53 @@
             </form>
         </div>
         
-        <div class="center-section">
-            <!--schedule-->
-            
-            {% for class in classes %}
-            <div class="class-info">
-                <h2>{{ class['course_code'] }}</h2>
-                <p><strong>Class Time:</strong> {{ class['ClassTime'] }}</p>
-                <p><strong>Weekday:</strong> {{ class['WeekDay'] }}</p>
-                <p><strong>Professor:</strong> {{ class['Professor'] }}</p>
-                <p><strong>Class Type:</strong> {{ class['ClassType'] }}</p>
-            </div>
-            {% endfor %}
+        <div class="center-section {% if not classes %}empty{% endif %}">
+            {% if classes %}
+                <div class="schedule-header">
+                    Your Class Schedule
+                </div>
+                <div class="class-info-container">
+                    {% for class in classes %}
+                        <div class="class-info">
+                            <h2>{{ class['course_code'] }}</h2>
+                            <p><strong>Class Time:</strong> {{ class['ClassTime'] }}</p>
+                            <p>
+                                <strong>Days:</strong> 
+                                {% for day in class['WeekDay'].split('/') %}
+                                    <span class="weekday-indicator">{{ day }}</span>
+                                {% endfor %}
+                            </p>
+                            <p><strong>Professor:</strong> {{ class['Professor'] }}</p>
+                            <p><strong>Type:</strong> {{ class['ClassType'] }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-schedule-placeholder">
+                    <p>Your schedule will appear here after you generate it.</p>
+                </div>
+            {% endif %}
         </div>
 
-        <div class="right-section">
-            <!--
-            {% if result is not none %}
-                <div class="result">
-                    <h3>Processing Result:</h3>
-                    <p>The class history contains {{ result }} lines.</p>
+        <div class="right-section {% if not professors %}empty{% endif %}">
+            {% if professors %}
+                <div class="schedule-header">
+                    Professor Information
                 </div>
-            {% endif %} -->
+                <div class="professor-info-container">
+                    {% for professor in professors %}
+                        <div class="professor-info">
+                            <h2>{{ professor['name'] }}</h2>
+                            <p><strong>Rating:</strong> {{ professor['rating'] }}</p>
+                            <p><strong>Summary:</strong> {{ professor['summary'] }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-schedule-placeholder">
+                    <p>Professor information will appear here after you generate your schedule.</p>
+                </div>
+            {% endif %}
         </div>
 
     </main>
