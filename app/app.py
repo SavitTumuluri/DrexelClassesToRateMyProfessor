@@ -39,7 +39,12 @@ classes = [
         }
 ]
 
-#classes = []
+professors = [{"name": "Preetha Chatterjee", "rating": "4.0", "summary": "Provides lots of homework and is a tough grader; however, is caring and gives good feedback. Participation matters."},
+{"name": "Brian S Mitchell", "rating": "4.0", "summary": "Very helpful and understanding; however, the course is challenging and requires a lot of effort."},
+{"name": "Hung N Do", "rating": "N/A", "summary": "Summary not available"},
+{"name": "Dario D Salvucci", "rating": "4.7", "summary": "Excellent professor with engaging lectures; however, the course is challenging and requires a lot of effort."}]
+
+
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -53,11 +58,11 @@ def home():
         # Process the transcript data
         result = parse_transcipts(user_transcript)
         
-        # Pass the hardcoded classes only for POST requests
-        return render_template('index.html', result=result, classes=classes)
+        # Pass the hardcoded classes and professors for POST requests
+        return render_template('index.html', result=result, classes=classes, professors=professors)
     
-    # For GET requests, pass an empty list for classes
-    return render_template('index.html', result=None, classes=[])
+    # For GET requests, pass an empty list for classes and professors
+    return render_template('index.html', result=None, classes=[], professors=[])
 
 
 

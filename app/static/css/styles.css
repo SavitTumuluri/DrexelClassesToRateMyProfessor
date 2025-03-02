@@ -401,3 +401,80 @@ body {
 .hidden {
     display: none;
 }
+
+/* Professor information container */
+.professor-info-container {
+    width: 100%;
+    max-width: 600px; /* Limit maximum width for better readability */
+    margin: 0 auto; /* Center the container */
+}
+
+.professor-info {
+    background-color: #fff5f5;
+    border-radius: 8px;
+    border-left: 4px solid #e3c205;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    width: 100%; /* Take full width of parent */
+    box-sizing: border-box; /* Include padding in width calculation */
+    overflow: hidden; /* Prevent content overflow */
+}
+
+.professor-info h2 {
+    color: #e3c205;
+    margin: 0 0 10px 0;
+    font-size: 1.4rem;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 8px;
+    white-space: normal; /* Allow text to wrap */
+    word-break: break-word; /* Break long words if needed */
+}
+
+.professor-info p {
+    margin: 8px 0;
+    display: flex;
+    flex-wrap: wrap; /* Allow content to wrap */
+    align-items: flex-start;
+}
+
+.professor-info p strong {
+    min-width: 100px; /* Minimum width for labels */
+    margin-right: 8px;
+    color: #555;
+}
+
+/* Empty professor info placeholder */
+.empty-schedule-placeholder {
+    color: #9e9e9e;
+    text-align: center;
+    padding: 2rem;
+    font-style: italic;
+}
+
+/* Adjust right section to match center section styling */
+.right-section {
+    padding: 2rem;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    border: 1px solid #e0e0e0;
+    background-image: none;
+    overflow-y: auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.right-section.empty {
+    justify-content: center;
+    border: 2px dashed #e0e0e0;
+    background-image: linear-gradient(45deg, #f9f9f9 25%, transparent 25%), 
+                      linear-gradient(-45deg, #f9f9f9 25%, transparent 25%), 
+                      linear-gradient(45deg, transparent 75%, #f9f9f9 75%), 
+                      linear-gradient(-45deg, transparent 75%, #f9f9f9 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+}

@@ -95,14 +95,25 @@
             {% endif %}
         </div>
 
-        <div class="right-section">
-            <!--
-            {% if result is not none %}
-                <div class="result">
-                    <h3>Processing Result:</h3>
-                    <p>The class history contains {{ result }} lines.</p>
+        <div class="right-section {% if not classes %}empty{% endif %}">
+            {% if classes %}
+                <div class="schedule-header">
+                    Professor Information
                 </div>
-            {% endif %} -->
+                <div class="professor-info-container">
+                    {% for professor in professors %}
+                        <div class="professor-info">
+                            <h2>{{ professor['name'] }}</h2>
+                            <p><strong>Rating:</strong> {{ professor['rating'] }}</p>
+                            <p><strong>Summary:</strong> {{ professor['summary'] }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-schedule-placeholder">
+                    <p>Professor information will appear here after you generate your schedule.</p>
+                </div>
+            {% endif %}
         </div>
 
     </main>
