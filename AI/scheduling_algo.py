@@ -17,11 +17,12 @@ def check_prerequisites(course_prereqs, completed_courses):
                 return False
     return True
 
-def calculate_score(professor_rating, professor_tags, user_tags):
+def calculate_score(professor_rating, comment, user_tags):
     """
-    Compute score as the sum of the professor's overall rating and the count of matching tags.
+    Compute score as the sum of the professor's rating and the number of user-supplied keywords
+    found in the professor's comment (case-insensitive).
     """
-    match_count = sum(1 for tag in professor_tags if tag in user_tags)
+    match_count = sum(1 for tag in user_tags if tag.lower() in comment.lower())
     return professor_rating + match_count
 
 def parse_time(time_str):
@@ -57,7 +58,6 @@ def sections_conflict(sec1, sec2):
 def group_course_packages(courses):
     """
     Group course sections by their course code.
-    We assume each course dict contains either 'course_code' or 'SubjectCode'.
     Sections that share the same code (and thus represent lectures, labs, recitations) will be combined.
     """
     packages = {}
@@ -73,23 +73,20 @@ def group_course_packages(courses):
 def package_score(package, professors, user_tags):
     """
     Calculate the overall score for a package.
-    Prefer the lecture section (if available) to determine the professor's rating.
+    We prefer to use the lecture section (if available) to determine the professor's rating and comment.
     """
     main_section = None
     for sec in package:
-        # Assume the main lecture is marked as 'Lecture' (case-insensitive)
         if sec.get('ClassType', '').lower() == 'lecture':
             main_section = sec
             break
     if not main_section:
         main_section = package[0]
     prof_name = main_section.get('Professor')
-    # Find the matching professor
     prof = next((p for p in professors if p.get('name') == prof_name), None)
     if not prof:
-        # If professor info is missing, return a default score of 0
         return 0
-    return calculate_score(prof.get('overallRating', 0), prof.get('tags', []), user_tags)
+    return calculate_score(prof.get('rating', 0), prof.get('comment', ""), user_tags)
 
 def package_conflicts(pkg, scheduled_packages):
     """
@@ -105,12 +102,12 @@ def package_conflicts(pkg, scheduled_packages):
 def schedule_courses(courses, professors, user_tags, completed_courses):
     """
     Build a final schedule by:
-      1. Filtering out courses already completed or that fail prerequisites.
-      2. Grouping sections into course packages (which automatically considers attached labs/recitations).
+      1. Filtering out courses that are already completed or that fail prerequisites.
+      2. Grouping sections into course packages (automatically considering attached labs/recitations).
       3. Sorting packages by score (higher score is prioritized).
       4. Adding packages one by one if none of their sections conflict with already scheduled packages.
     """
-    # Filter courses based on completed courses and prerequisites
+    # 1. Filter courses based on completed courses and prerequisites
     filtered = []
     for course in courses:
         code = course.get('course_code') or course.get('SubjectCode')
@@ -122,13 +119,14 @@ def schedule_courses(courses, professors, user_tags, completed_courses):
                 continue
         filtered.append(course)
     
-    # Group courses into packages by course code
+    # 2. Group courses into packages by course code
     packages_dict = group_course_packages(filtered)
     packages = list(packages_dict.values())
     
-    # Sort packages by their calculated score (using the main lecture's professor if available)
+    # 3. Sort packages by their calculated score (using the main lecture's professor review)
     packages.sort(key=lambda pkg: package_score(pkg, professors, user_tags), reverse=True)
     
+    # 4. Add packages to the final schedule if they do not conflict with already scheduled sections
     final_schedule = []
     for pkg in packages:
         if not package_conflicts(pkg, final_schedule):
@@ -137,17 +135,17 @@ def schedule_courses(courses, professors, user_tags, completed_courses):
 
 # Example usage:
 if __name__ == "__main__":
-    # Sample completed courses and user tag preferences
+    # Sample completed courses and user tag preferences (keywords to match in professor comments)
     completed_courses = ["CS260", "CS150"]
-    user_tags = ["fun", "clear", "organized"]
+    user_tags = ["pointless", "waste", "confused"]
     
     # Sample course sections (each dict represents a section)
     courses = [
-        # CS150 has a lab and a lecture. Since CS150 is already completed (per completed_courses), it will be filtered out.
+        # CS150 has a lab and a lecture. Since CS150 is already completed, these will be filtered out.
         {"course_code": "CS150", "ClassTime": "09:00 am - 10:50 am", "WeekDay": "F", "Professor": "Daniel W Moix", "ClassType": "Lab"},
         {"course_code": "CS150", "ClassTime": "11:00 am - 12:50 pm", "WeekDay": "T", "Professor": "Daniel W Moix", "ClassType": "Lecture"},
         
-        # CS164 has a prerequisite that is a nested list structure
+        # CS164 has a prerequisite that is a nested list structure.
         {"course_code": "CS164", "ClassTime": "01:00 pm - 02:50 pm", "WeekDay": "W", "Professor": "Brian L Stuart", "ClassType": "Lab", 
          "prerequisite": [["CS260"], [["CS281", "ECEC355"]]]},
         {"course_code": "CS164", "ClassTime": "09:00 am - 10:50 am", "WeekDay": "M", "Professor": "Brian L Stuart", "ClassType": "Lecture",
@@ -158,19 +156,30 @@ if __name__ == "__main__":
         {"course_code": "CS171", "ClassTime": "09:00 am - 10:50 am", "WeekDay": "T", "Professor": "Daniel W Moix", "ClassType": "Lecture"}
     ]
     
-    # Sample professor data with overall rating and tags
+    # Sample professor data updated to use the API format (only rating, difficulty, comment, and class_name available)
     professors = [
-        {"name": "Daniel W Moix", "overallRating": 4.0, "tags": ["organized", "fun"]},
-        {"name": "Brian L Stuart", "overallRating": 3.5, "tags": ["clear", "challenging"]}
+        {
+            "name": "Daniel W Moix", 
+            "rating": 1, 
+            "difficulty": 5, 
+            "comment": "Honestly one of the biggest regrets I have taking this professor. His lectures are literally pointless and a waste of time. The HWs are extremely long and barely correlates to the lectures and he literally takes points off for fun. He is aggressive towards students that ask for help. He doesn't submit grades on time so students are always confused.", 
+            "class_name": "CS260"
+        },
+        {
+            "name": "Brian L Stuart", 
+            "rating": 3.5, 
+            "difficulty": 3.7, 
+            "comment": "A decent professor, though his lectures can be a bit confusing at times.", 
+            "class_name": "CS164"
+        }
     ]
     
     final_schedule = schedule_courses(courses, professors, user_tags, completed_courses)
     
-    # Print the final schedule.
     print("Final Schedule:")
     for pkg in final_schedule:
-        course_code = pkg[0].get('course_code') or pkg[0].get('SubjectCode')
+        code = pkg[0].get('course_code') or pkg[0].get('SubjectCode')
         score = package_score(pkg, professors, user_tags)
-        print(f"\nCourse: {course_code} (Score: {score})")
+        print(f"\nCourse: {code} (Score: {score})")
         for sec in pkg:
             print(f"  Type: {sec.get('ClassType')}, Day: {sec.get('WeekDay')}, Time: {sec.get('ClassTime')}, Professor: {sec.get('Professor')}")
