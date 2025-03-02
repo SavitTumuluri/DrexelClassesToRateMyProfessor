@@ -75,7 +75,6 @@ header h1 {
 }
 
 .center-section::before, .right-section::before {
-    content: "Schedule will appear here";
     color: #9e9e9e;
     font-size: 0.9rem;
     font-style: italic;

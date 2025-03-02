@@ -9,8 +9,10 @@ def home():
     if request.method == 'POST':
         user_transcript = request.form['class-history']
         result = parse_transcipts(user_transcript)
-
+    
     return render_template('index.html', result = result)
+
+
 
 
 if __name__ == '__main__':
