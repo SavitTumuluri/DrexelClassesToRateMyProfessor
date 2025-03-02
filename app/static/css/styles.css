@@ -258,8 +258,8 @@ body {
 }
 
 .smaller-image {
-    max-width: 50%;
-    height: 50%;
+    max-width: 50px;
+    height: 100px;
 }
 
 .close-button {
