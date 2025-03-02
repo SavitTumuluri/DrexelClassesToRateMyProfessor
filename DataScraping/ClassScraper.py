@@ -8,7 +8,7 @@ import time
 import re
 import Course
 import json
-import RateMyProfessor
+from RateMyProfessor import RMP
 import DrexelSignIn
 import Class
 import TermMaster
@@ -77,20 +77,20 @@ table = driver.find_element(By.ID, "sortableTable")
 
 termMasterInstance = TermMaster.TermMaster(table)
 classes_json = termMasterInstance.ExtractClasses()
+print(classes_json)
+newRMP = RMP()
+for professorName in termMasterInstance.professors:
+    currentProfessor = newRMP.AddProfessor(profName=professorName)
+
+professor_json = newRMP.GetAllProfessors()
+
+
 allCourses = []
 for courseNumber in termMasterInstance.coursesNumber:
     catalogurl = f"https://catalog.drexel.edu/search/?P={courseNumber}"
     course = ExtractCourseInfo(driver=driver, url=catalogurl)
     allCourses.append(course)
 courses_json = json.dumps([course.__dict__ for course in allCourses], indent=4)
-list_of_professors = []
-for professor in termMasterInstance.professors:
-    currentProfessor = RateMyProfessor.GetProfessors(professor)
-    if (currentProfessor):
-        list_of_professors.append(currentProfessor)
-
-professor_json = json.dumps([prof.__dict__ for prof in list_of_professors], indent=4)
-print(professor_json)
 
 '''professor_json = RateMyProfessor.GetProfessors()
 print(professor_json)'''

@@ -67,7 +67,7 @@ class TermMaster:
     def ExtractProfessors(self, rows):
         list_of_professors = set()
         for currentClass in rows:
-            possibleProfessor = currentClass[8]
+            possibleProfessor = currentClass[10]
             if (possibleProfessor != None or possibleProfessor.lower() != "tbd"):
                 list_of_professors.add(possibleProfessor)
         

@@ -1,40 +1,37 @@
 import ratemyprofessor
 import json
 import Professor
+from Encoder import DateTimeEncoder
 from datetime import datetime
 
-class DateTimeEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, datetime):
-            return obj.isoformat()
-        return super().default(obj)
+class RMP:
+    def __init__(self):
+        self.professors = []
+        self.school = ratemyprofessor.get_school_by_name("Drexel University")
     
-school = ratemyprofessor.get_school_by_name("Drexel University")
 
-def GetProfessors(profNames):
-    list_of_professors = []
-    list_of_inputProfessors = set()
-    
-    for profname in profNames:
-        professor = ratemyprofessor.get_professor_by_school_and_name(school, profName)
-        if professor:
-            list_of_inputProfessors.add(professor)
+    def AddProfessor(self, profName):
+        professor = ratemyprofessor.get_professor_by_school_and_name(self.school, profName)
+        self.professors.append(professor)
 
-    for currentProfessor in list_of_inputProfessors:
-        profid = currentProfessor.id
-        profName = currentProfessor.name
-        overallRating = currentProfessor.rating
-        difficulty = currentProfessor.difficulty
-        rmp = ratemyprofessor.professor.Professor.get_ratings(currentProfessor.name)
-        ratingMetadata = None
-        if (rmp is not None):
-            ratingMetadata = json.dumps([rating.__dict__ for rating in rmp], cls=DateTimeEncoder, indent=4)
+    def GetAllProfessors(self):
+        list_of_professors = []
+        for currentProfessor in self.professors:
+            profid = currentProfessor.id
+            profName = currentProfessor.name
+            overallRating = currentProfessor.rating
+            difficulty = currentProfessor.difficulty
+            rmp = ratemyprofessor.professor.Professor.get_ratings(currentProfessor)
+            ratingMetadata = None
+            if (rmp is not None):
+                ratingMetadata = json.dumps([rating.__dict__ for rating in rmp], cls=DateTimeEncoder, indent=4)
+            
+            newProf = Professor.Professor(id=profid, profName=profName, overallRating=overallRating, difficulty=difficulty, metaData=ratingMetadata)
+            list_of_professors.append(newProf)
         
-        newProf = Professor.Professor(profid=profid, profName=profName, overallRating=overallRating, difficulty=difficulty, metaData=ratingMetadata)
-        list_of_professors.append(newProf)
-    
-    json_data = json.dumps([eachProfessor.__dict__ for eachProfessor in list_of_professors], indent=4)
-    return json_data
+        print(len(list_of_professors))
+        json_data = json.dumps([eachProfessor.__dict__ for eachProfessor in list_of_professors], indent=4)
+        return json_data
 
     '''professor = ratemyprofessor.get_professor_by_school_and_name(school, "Dimitrios Papadopoulos")
 
