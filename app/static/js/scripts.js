@@ -1,48 +1,49 @@
-const creditInput = document.getElementById('credit-limit');
-
-function validateCredits() {
-    const credits = parseFloat(creditInput.value);
-    if (isNaN(credits)) {
-        creditInput.classList.remove('invalid');
-        return;
-    }
-    
-    if (credits < 12.0 || credits > 20.0) {
-        creditInput.classList.add('invalid');
-        return false;
-    } else {
-        creditInput.classList.remove('invalid');
-        return true;
-    }
-}
-
-async function handleSubmit() {
-    if (!validateCredits()) {
-        alert('Please enter a credit value between 12.0 and 20.0');
-        return;  // Stop submission if credits are invalid
-    }
-    // Get values from all inputs
-    const selectedMajor = document.getElementById('major-select').value;
-    const selectedTerm = document.getElementById('term-select').value;
-    const creditHours = document.getElementById('credit-limit').value;
-    const classHistory = document.getElementById('history-input').value.toString();
-
-    // Create an object with the form data
-    const formData = {
-        major: selectedMajor,
-        term: selectedTerm,
-        credits: creditHours,
-        history: classHistory
-    };
-
-    // Log to console to verify data
-    console.log('Form Data:', formData);
-    localStorage.setItem('scheduleData', JSON.stringify(formData));
-}
-
 document.addEventListener('DOMContentLoaded', function() {
-     // Add modal HTML to the document
-     document.body.insertAdjacentHTML('beforeend', `
+    // Move this inside DOMContentLoaded
+    const creditInput = document.getElementById('credit-limit');
+    
+    function validateCredits() {
+        const credits = parseFloat(creditInput.value);
+        if (isNaN(credits)) {
+            creditInput.classList.remove('invalid');
+            return;
+        }
+        
+        if (credits < 12.0 || credits > 20.0) {
+            creditInput.classList.add('invalid');
+            return false;
+        } else {
+            creditInput.classList.remove('invalid');
+            return true;
+        }
+    }
+
+    async function handleSubmit() {
+        if (!validateCredits()) {
+            alert('Please enter a credit value between 12.0 and 20.0');
+            return;  // Stop submission if credits are invalid
+        }
+        // Get values from all inputs
+        const selectedMajor = document.getElementById('major-select').value;
+        const selectedTerm = document.getElementById('term-select').value;
+        const creditHours = document.getElementById('credit-limit').value;
+        const classHistory = document.getElementById('history-input').value.toString();
+
+        // Create an object with the form data
+        const formData = {
+            major: selectedMajor,
+            term: selectedTerm,
+            credits: creditHours,
+            history: classHistory
+        };
+
+        // Log to console to verify data
+        console.log('Form Data:', formData);
+        localStorage.setItem('scheduleData', JSON.stringify(formData));
+    }
+
+    // Add modal HTML to the document
+    document.body.insertAdjacentHTML('beforeend', `
         <div class="modal" id="instructionsModal">
             <div class="modal-content">
                 <span class="close-button" id="closeModal">&times;</span>
@@ -66,7 +67,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const modal = document.getElementById('instructionsModal');
     const closeButton = document.getElementById('closeModal');
     const submitButton = document.getElementById('submit-btn');
-    const creditInput = document.getElementById('credit-limit');
 
     // Check if elements exist before adding listeners
     if (creditInput) {
@@ -80,14 +80,23 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.error('Submit button not found');
     }
-    helpLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        modal.style.display = 'block';
-    });
+    
+    if (helpLink) {
+        helpLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            modal.style.display = 'block';
+        });
+    } else {
+        console.error('Help link not found');
+    }
 
-    closeButton.addEventListener('click', function() {
-        modal.style.display = 'none';
-    });
+    if (closeButton) {
+        closeButton.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+    } else {
+        console.error('Close button not found');
+    }
 
     // Close modal when clicking outside
     window.addEventListener('click', function(e) {
@@ -95,8 +104,4 @@ document.addEventListener('DOMContentLoaded', function() {
             modal.style.display = 'none';
         }
     });
-    
-    // Check on input change
-    creditInput.addEventListener('input', validateCredits);
-    submitButton.addEventListener('click', handleSubmit);
 });

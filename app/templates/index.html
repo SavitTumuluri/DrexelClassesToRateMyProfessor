@@ -63,17 +63,28 @@
             </form>
         </div>
         
-        <div class="center-section">
-            <!--schedule-->
-            {% for class in classes %}
-            <div class="class-info">
-                <h2>{{ class['course_code'] }}</h2>
-                <p><strong>Class Time:</strong> {{ class['ClassTime'] }}</p>
-                <p><strong>Weekday:</strong> {{ class['WeekDay'] }}</p>
-                <p><strong>Professor:</strong> {{ class['Professor'] }}</p>
-                <p><strong>Class Type:</strong> {{ class['ClassType'] }}</p>
-            </div>
-            {% endfor %}
+        <div class="center-section {% if not classes %}empty{% endif %}">
+            {% if classes %}
+                <div class="schedule-header">
+                    Your Class Schedule
+                </div>
+                <div class="class-info-container">
+                    {% for class in classes %}
+                    <div class="class-info">
+                        <h2>{{ class['course_code'] }}</h2>
+                        <p><strong>Class Time:</strong> {{ class['ClassTime'] }}</p>
+                        <p>
+                            <strong>Days:</strong> 
+                            {% for day in class['WeekDay'].split('/') %}
+                                <span class="weekday-indicator">{{ day }}</span>
+                            {% endfor %}
+                        </p>
+                        <p><strong>Professor:</strong> {{ class['Professor'] }}</p>
+                        <p><strong>Type:</strong> {{ class['ClassType'] }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
         </div>
 
         <div class="right-section">
