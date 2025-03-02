@@ -60,10 +60,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     <p>Follow these steps to get your class history:</p>
                     <ol>
                         <li>Go to your DegreeWorks page and click on the three dots on the right-hand side of the page.</li>
-                        <img src="{{ url_for('static', filename='images/step1Instruction.png') }}" alt="Step 1 photo">
-                        <li>Step 2 with description</li>
-                        <img src="{{ url_for('static', filename='images/step2Instruction.png') }}" alt="Step 2 photo">
-                        <li>Step 3 with description</li>
+                        <img src="{{ url_for('static', filename='images/step1Instruction.png') }}" alt="description">
+                        <li>Click on Class History</li>
+                        <img src="{{ url_for('static', filename='images/step2Instruction.png') }}" alt="description">
+                        <li>Highlight all of the information, and copy and paste it into the text box provided on this website.</li>
                     </ol>
                 </div>
             </div>
