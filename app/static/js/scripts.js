@@ -26,11 +26,18 @@ document.addEventListener('DOMContentLoaded', function() {
             return;  // Stop submission if credits are invalid
         }
         
-        // Get the form element
-        const form = document.querySelector('form');
+        // Show loading overlay
+        const loadingOverlay = document.getElementById('loading-overlay');
+        loadingOverlay.classList.remove('hidden');
         
-        // Submit the form
-        form.submit();
+        // Simulate processing time (3 seconds)
+        setTimeout(() => {
+            // Get the form element
+            const form = document.querySelector('form');
+            
+            // Submit the form
+            form.submit();
+        }, 3000); // 3 seconds delay
     }
 
     // Add modal HTML to the document
@@ -95,4 +102,10 @@ document.addEventListener('DOMContentLoaded', function() {
             modal.style.display = 'none';
         }
     });
+
+    // Hide loading screen once page is fully loaded
+    const loadingOverlay = document.getElementById('loading-overlay');
+    if (loadingOverlay) {
+        loadingOverlay.classList.add('hidden');
+    }
 });
