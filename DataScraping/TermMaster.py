@@ -56,7 +56,11 @@ class TermMaster:
             else :
                 date = splitDate[0]
                 classTime = splitDate[0]
-            professor = current[8]
+
+            professor = current[10]
+            if ("Dec" in professor):
+                professor = current[12]
+
             newClass = Class.Class(subjectCode=subjectCode, classType=classType, method=method, section=section, crn=crn, name=name, date=date, classTime=classTime, professor=professor)
             list_of_classes.append(newClass)
 
