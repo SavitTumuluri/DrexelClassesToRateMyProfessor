@@ -6,39 +6,32 @@ summarizer = pipeline("summarization")
 def summarize_course_package(package, professors):
     """
     Given a course package (a list of course sections for a single course) and professor data,
-    this function aggregates all review comments for the relevant professor and uses the summarization
-    pipeline to produce a concise summary.
+    this function aggregates all review comments for the relevant course based on its course code
+    and uses the summarization pipeline to produce a concise summary.
+    
+    It no longer cares about class type—only the course code (from 'course_code' or 'SubjectCode').
     """
-    # Prefer a lecture section; if none, use the first available section.
-    main_section = None
-    for sec in package:
-        if sec.get("ClassType", "").lower() == "lecture":
-            main_section = sec
-            break
-    if not main_section:
-        main_section = package[0]
+    # Extract the course code from the first section in the package.
+    course_code = package[0].get("course_code") or package[0].get("SubjectCode", "Unknown Course")
     
-    prof_name = main_section.get("Professor", "Unknown Professor")
-    # Retrieve professor info from the provided professors list.
-    prof = next((p for p in professors if p.get("name") == prof_name), None)
+    # Filter professor data for entries that match this course code.
+    relevant_profs = [p for p in professors if p.get("class_name") == course_code]
     
-    if prof:
-        rating = prof.get('rating', 'N/A')
-        # If the professor has multiple comments, aggregate them.
-        # Expecting 'comments' to be a list; if not, fallback to the single 'comment' field.
-        comments = prof.get('comments')
-        if comments and isinstance(comments, list):
-            aggregated_comments = " ".join(comments)
-        else:
-            aggregated_comments = prof.get('comment', 'No comment available.')
-        
+    if relevant_profs:
+        # Aggregate all comments from the relevant professors.
+        aggregated_comments = " ".join(
+            p.get("comment", "") for p in relevant_profs if p.get("comment")
+        )
+        # Optionally, aggregate ratings (here we just list them).
+        aggregated_ratings = ", ".join(
+            str(p.get("rating", "N/A")) for p in relevant_profs
+        )
         text_to_summarize = (
-            f"Professor {prof_name} teaches this course. "
-            f"Rating: {rating}. "
+            f"For course {course_code}, ratings are: {aggregated_ratings}. "
             f"Reviews: {aggregated_comments}"
         )
     else:
-        text_to_summarize = "No professor information available for this course package."
+        text_to_summarize = f"No professor information available for course {course_code}."
     
     # Generate a summary using the summarization pipeline.
     summary = summarizer(text_to_summarize, max_length=50, min_length=25, do_sample=False)[0]['summary_text']
@@ -51,7 +44,7 @@ def summarize_schedule(final_schedule, professors):
     """
     summaries = {}
     for pkg in final_schedule:
-        # Use course_code or fallback to SubjectCode; default to "Unknown Course" if missing.
+        # Extract the course code; if missing, use "Unknown Course"
         code = pkg[0].get("course_code") or pkg[0].get("SubjectCode", "Unknown Course")
         summary = summarize_course_package(pkg, professors)
         summaries[code] = summary
@@ -61,12 +54,12 @@ if __name__ == "__main__":
     # Example usage for testing the summarizer independently.
     final_schedule = [
         [
-            {"course_code": "CS164", "ClassType": "Lecture", "Professor": "Brian L Stuart"},
-            {"course_code": "CS164", "ClassType": "Lab", "Professor": "Brian L Stuart"}
+            {"course_code": "CS164", "Professor": "Brian L Stuart"},
+            {"course_code": "CS164", "Professor": "Brian L Stuart"}
         ],
         [
-            {"course_code": "CS171", "ClassType": "Lecture", "Professor": "Daniel W Moix"},
-            {"course_code": "CS171", "ClassType": "Lab", "Professor": "Daniel W Moix"}
+            {"course_code": "CS171", "Professor": "Daniel W Moix"},
+            {"course_code": "CS171", "Professor": "Daniel W Moix"}
         ]
     ]
     
@@ -74,18 +67,16 @@ if __name__ == "__main__":
         {
             "name": "Brian L Stuart",
             "rating": 3.5,
-            "comments": [
-                "A decent professor, though his lectures can be a bit confusing at times.",
-                "He is very knowledgeable but sometimes uses overly technical language."
-            ]
+            "class_name": "CS164",
+            "comment": ("A decent professor, though his lectures can be a bit confusing at times. "
+                        "He is very knowledgeable but sometimes uses overly technical language.")
         },
         {
             "name": "Daniel W Moix",
             "rating": 1,
-            "comments": [
-                "Honestly one of the biggest regrets I have taking this professor.",
-                "His lectures are literally pointless and a waste of time."
-            ]
+            "class_name": "CS171",
+            "comment": ("Honestly one of the biggest regrets I have taking this professor. "
+                        "His lectures are literally pointless and a waste of time.")
         }
     ]
     
