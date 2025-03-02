@@ -1,11 +1,13 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 import time
 import re
 import Course
+import json
 import RateMyProfessor
 import DrexelSignIn
 import Class
@@ -13,14 +15,22 @@ import TermMaster
 
 # Set up Chrome options (optional)
 chrome_options = Options()
+chrome_options.add_argument("--start-maximized")
 
 
 def ExtractCourseInfo(driver, url):
-    driver.get(url)
-    searchbox = driver.find_element(By.ID, "fssearchresults")
-    courseHead = searchbox.find_element(By.TAG_NAME, "h2")
-    courseInfo = courseHead.text.strip()
-    ParseCourseInfo(searchbox.get_attribute('innerHTML'))
+    try:
+        driver.get(url)
+        time.sleep(2)
+        searchbox = driver.find_element(By.ID, "fssearchresults")
+        courseHead = searchbox.find_element(By.TAG_NAME, "h2")
+        courseInfo = courseHead.text.strip()
+        time.sleep(2)
+        return ParseCourseInfo(searchbox.get_attribute('innerHTML'))
+    except TimeoutException:
+        print("Page load timed out. Trying again...")
+        driver.refresh()  # Try reloading the page
+    
 
 def ParseCourseInfo(courseInfo):
     soup = BeautifulSoup(courseInfo, "html.parser")
@@ -41,9 +51,7 @@ def ParseCourseInfo(courseInfo):
         if "Prerequisites" in b_tag.text:
             prerequisites = b_tag.next_sibling.strip()
     newCourse.SetPrerequisite(prerequisites)
-
-    print(newCourse.__dict__)
-
+    return newCourse
     
 
 
@@ -53,6 +61,7 @@ chrome_driver_path = "C:/Users/Serena Osuagwu/Downloads/chromedriver-win64/chrom
 # Initialize the WebDriver
 service = Service(chrome_driver_path)
 driver = webdriver.Chrome(service=service, options=chrome_options)
+driver.set_page_load_timeout(300)
 
 
 DrexelSignIn.SignIn(driver=driver)
@@ -67,18 +76,25 @@ time.sleep(5)
 table = driver.find_element(By.ID, "sortableTable")
 
 termMasterInstance = TermMaster.TermMaster(table)
-driver.quit()
-
-newService = Service(chrome_driver_path)
-newDriver = webdriver.Chrome(service=service, options=chrome_options)
 classes_json = termMasterInstance.ExtractClasses()
+allCourses = []
 for courseNumber in termMasterInstance.coursesNumber:
     catalogurl = f"https://catalog.drexel.edu/search/?P={courseNumber}"
-    ExtractCourseInfo(driver=newDriver, url=catalogurl)
+    course = ExtractCourseInfo(driver=driver, url=catalogurl)
+    allCourses.append(course)
+courses_json = json.dumps([course.__dict__ for course in allCourses], indent=4)
+list_of_professors = []
+for professor in termMasterInstance.professors:
+    currentProfessor = RateMyProfessor.GetProfessors(professor)
+    if (currentProfessor):
+        list_of_professors.append(currentProfessor)
+
+professor_json = json.dumps([prof.__dict__ for prof in list_of_professors], indent=4)
+print(professor_json)
 
 '''professor_json = RateMyProfessor.GetProfessors()
 print(professor_json)'''
 
 
 # Close the WebDriver
-newDriver.quit()
+driver.quit()
