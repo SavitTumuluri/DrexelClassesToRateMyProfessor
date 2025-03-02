@@ -1,7 +1,7 @@
 const creditInput = document.getElementById('credit-limit');
 
 function validateCredits() {
-    const credits = parseInt(creditInput.value);
+    const credits = parseFloat(creditInput.value);
     if (isNaN(credits)) {
         creditInput.classList.remove('invalid');
         return;
@@ -18,7 +18,7 @@ function validateCredits() {
 
 async function handleSubmit() {
     if (!validateCredits()) {
-        alert('Please enter a credit value between 12 and 20');
+        alert('Please enter a credit value between 12.0 and 20.0');
         return;  // Stop submission if credits are invalid
     }
     // Get values from all inputs
@@ -35,40 +35,9 @@ async function handleSubmit() {
         history: classHistory
     };
 
-    // Log to console to verify data (you can remove this later)
+    // Log to console to verify data
     console.log('Form Data:', formData);
     localStorage.setItem('scheduleData', JSON.stringify(formData));
-
-    // Basic validation
-    if (!selectedMajor || !selectedTerm || !creditHours || !classHistory) {
-        alert('Please fill in all fields');
-        return;
-    }
-
-    try {
-        const response = await fetch('/api/submit', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData)
-        });
-
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-
-        const result = await response.json();
-        console.log('Success:', result);
-    } catch (error) {
-        console.error('Error:', error);
-        alert('There was a problem submitting your data');
-    }
-    // Here you can:
-    // 1. Send to backend
-    // 2. Store in localStorage
-    // 3. Process the data
-    return formData;
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -131,4 +100,3 @@ document.addEventListener('DOMContentLoaded', function() {
     creditInput.addEventListener('input', validateCredits);
     submitButton.addEventListener('click', handleSubmit);
 });
-
