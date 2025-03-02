@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <li>Go to your DegreeWorks page and click on the three dots on the right-hand side of the page.</li>
                         <img src="/static/images/step1Instruction.png" alt="description">
                         <li>Click on Class History</li>
-                        <img src="/static/images/step2Instruction.png" alt="description">
+                        <img src="/static/images/step2Instruction.png" alt="description" class="smaller-image">
                         <li>Highlight all of the information, and copy and paste it into the text box provided on this website.</li>
                     </ol>
                 </div>
