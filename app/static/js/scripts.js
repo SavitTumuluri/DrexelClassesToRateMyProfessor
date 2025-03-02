@@ -96,7 +96,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const helpLink = document.getElementById('history-help');
     const modal = document.getElementById('instructionsModal');
     const closeButton = document.getElementById('closeModal');
+    const submitButton = document.getElementById('submit-btn');
+    const creditInput = document.getElementById('credit-limit');
 
+    // Check if elements exist before adding listeners
+    if (creditInput) {
+        creditInput.addEventListener('input', validateCredits);
+    } else {
+        console.error('Credit input element not found');
+    }
+
+    if (submitButton) {
+        submitButton.addEventListener('click', handleSubmit);
+    } else {
+        console.error('Submit button not found');
+    }
     helpLink.addEventListener('click', function(e) {
         e.preventDefault();
         modal.style.display = 'block';
@@ -115,7 +129,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Check on input change
     creditInput.addEventListener('input', validateCredits);
-    const submitButton = document.getElementById('submit-btn');
     submitButton.addEventListener('click', handleSubmit);
 });
 
