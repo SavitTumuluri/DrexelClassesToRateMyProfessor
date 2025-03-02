@@ -39,7 +39,7 @@ classes = [
         }
 ]
 
-professors = [{"name": "Preetha Chatterjee", "rating": "4.0", "summary": "Provides lots of homework and is a tough grader; however, is caring and gives good feedback. Participation matters."},
+professors = [{"name": "Preetha Chatterjee", "rating": "4.0", "summary": "Provides lots of homework and is a tough grader; however, professor is caring and gives good feedback. Participation matters."},
 {"name": "Brian S Mitchell", "rating": "4.0", "summary": "Very helpful and understanding; however, the course is challenging and requires a lot of effort."},
 {"name": "Hung N Do", "rating": "N/A", "summary": "Summary not available"},
 {"name": "Dario D Salvucci", "rating": "4.7", "summary": "Excellent professor with engaging lectures; however, the course is challenging and requires a lot of effort."}]
