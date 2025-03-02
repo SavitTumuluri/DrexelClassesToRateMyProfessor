@@ -1,68 +1,20 @@
-document.addEventListener('DOMContentLoaded', function() {
-     // Add modal HTML to the document
-     document.body.insertAdjacentHTML('beforeend', `
-        <div class="modal" id="instructionsModal">
-            <div class="modal-content">
-                <span class="close-button" id="closeModal">&times;</span>
-                <h2>How to Get Your Class History</h2>
-                <div class="instructions">
-                    <p>Follow these steps to get your class history:</p>
-                    <ol>
-                        <li>Go to your DegreeWorks page and click on the three dots on the right-hand side of the page.</li>
-                        <img src="/static/images/step1Instruction.png" alt="description">
-                        <li>Click on Class History</li>
-                        <img src="/static/images/step2Instruction.png" alt="description" class="smaller-image">
-                        <li>Highlight all of the information, and copy and paste it into the text box provided on this website.</li>
-                    </ol>
-                </div>
-            </div>
-        </div>
-    `);
+const creditInput = document.getElementById('credit-limit');
 
-    // Modal functionality
-    const helpLink = document.getElementById('history-help');
-    const modal = document.getElementById('instructionsModal');
-    const closeButton = document.getElementById('closeModal');
-
-    helpLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        modal.style.display = 'block';
-    });
-
-    closeButton.addEventListener('click', function() {
-        modal.style.display = 'none';
-    });
-
-    // Close modal when clicking outside
-    window.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            modal.style.display = 'none';
-        }
-    });
-    
-    const creditInput = document.getElementById('credit-limit');
-    
-    function validateCredits() {
-        const credits = parseInt(creditInput.value);
-        if (isNaN(credits)) {
-            creditInput.classList.remove('invalid');
-            return;
-        }
-        
-        if (credits < 12.0 || credits > 20.0) {
-            creditInput.classList.add('invalid');
-            return false;
-        } else {
-            creditInput.classList.remove('invalid');
-            return true;
-        }
+function validateCredits() {
+    const credits = parseInt(creditInput.value);
+    if (isNaN(credits)) {
+        creditInput.classList.remove('invalid');
+        return;
     }
     
-    // Check on input change
-    creditInput.addEventListener('input', validateCredits);
-    const submitButton = document.getElementById('submit-btn');
-    submitButton.addEventListener('click', handleSubmit);
-});
+    if (credits < 12.0 || credits > 20.0) {
+        creditInput.classList.add('invalid');
+        return false;
+    } else {
+        creditInput.classList.remove('invalid');
+        return true;
+    }
+}
 
 async function handleSubmit() {
     if (!validateCredits()) {
@@ -118,3 +70,52 @@ async function handleSubmit() {
     // 3. Process the data
     return formData;
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+     // Add modal HTML to the document
+     document.body.insertAdjacentHTML('beforeend', `
+        <div class="modal" id="instructionsModal">
+            <div class="modal-content">
+                <span class="close-button" id="closeModal">&times;</span>
+                <h2>How to Get Your Class History</h2>
+                <div class="instructions">
+                    <p>Follow these steps to get your class history:</p>
+                    <ol>
+                        <li>Go to your DegreeWorks page and click on the three dots on the right-hand side of the page.</li>
+                        <img src="/static/images/step1Instruction.png" alt="description">
+                        <li>Click on Class History</li>
+                        <img src="/static/images/step2Instruction.png" alt="description" class="smaller-image">
+                        <li>Highlight all of the information, and copy and paste it into the text box provided on this website.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    `);
+
+    // Modal functionality
+    const helpLink = document.getElementById('history-help');
+    const modal = document.getElementById('instructionsModal');
+    const closeButton = document.getElementById('closeModal');
+
+    helpLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        modal.style.display = 'block';
+    });
+
+    closeButton.addEventListener('click', function() {
+        modal.style.display = 'none';
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+    
+    // Check on input change
+    creditInput.addEventListener('input', validateCredits);
+    const submitButton = document.getElementById('submit-btn');
+    submitButton.addEventListener('click', handleSubmit);
+});
+
