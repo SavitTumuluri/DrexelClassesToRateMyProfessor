@@ -2,7 +2,7 @@ from pymongo import MongoClient
 
 config = {
     "uri" : "mongodb+srv://suewulin12:Izlfl0VFsWfPotJQ@ratemyprof.oqxbh.mongodb.net/?retryWrites=true&w=majority&appName=RateMyProf",
-    "dbName": "DrexelClass"
+    "dbName": "test"
 }
 
 def connect_to_mongo():

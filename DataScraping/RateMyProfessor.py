@@ -1,6 +1,8 @@
 import ratemyprofessor
 import json
 import Professor
+from pymongo import MongoClient
+from bson.objectid import ObjectId
 from Encoder import DateTimeEncoder
 from datetime import datetime
 
@@ -8,7 +10,10 @@ class RMP:
     def __init__(self):
         self.professors = []
         self.school = ratemyprofessor.get_school_by_name("Drexel University")
-    
+        self.client = MongoClient("mongodb+srv://suewulin12:Izlfl0VFsWfPotJQ@ratemyprof.oqxbh.mongodb.net/?retryWrites=true&w=majority&appName=RateMyProf")  # Adjust URI if needed
+        self.db = self.client["test"]
+        self.professors_collection = self.db["professors"]
+        self.ratings_collection = self.db["ratings"]
 
     def AddProfessor(self, profName):
         professor = ratemyprofessor.get_professor_by_school_and_name(self.school, profName)
@@ -22,15 +27,31 @@ class RMP:
             overallRating = currentProfessor.rating
             difficulty = currentProfessor.difficulty
             rmp = ratemyprofessor.professor.Professor.get_ratings(currentProfessor)
-            ratingMetadata = None
+
+            rating_ids = []
             if (rmp is not None):
-                ratingMetadata = json.dumps([rating.__dict__ for rating in rmp], cls=DateTimeEncoder, indent=4)
+                for rating in rmp:
+                    rating_dict = rating.__dict__
+                    rating_id = self.ratings_collection.insert_one(rating_dict).inserted_id
+                    rating_ids.append(rating_id)
+                #ratingMetadata = json.dumps([rating.__dict__ for rating in rmp], cls=DateTimeEncoder, indent=4)
             
-            newProf = Professor.Professor(id=profid, profName=profName, overallRating=overallRating, difficulty=difficulty, metaData=ratingMetadata)
-            list_of_professors.append(newProf)
+            professor_doc = {
+                "id": profid,
+                "name": profName,
+                "overallRating": overallRating,
+                "difficulty": difficulty,
+                "ratingMetadata": rating_ids
+            }
+
+            self.professors_collection.insert_one(professor_doc)
+
+            list_of_professors.append(professor_doc)
         
-        print(len(list_of_professors))
-        json_data = json.dumps([eachProfessor.__dict__ for eachProfessor in list_of_professors], indent=4)
+        #print(len(list_of_professors))
+        json_data = json.dumps(list_of_professors, default=str, indent=4)
+        #self.professors_collection.insert_one(json_data)
+
         return json_data
 
     '''professor = ratemyprofessor.get_professor_by_school_and_name(school, "Dimitrios Papadopoulos")
