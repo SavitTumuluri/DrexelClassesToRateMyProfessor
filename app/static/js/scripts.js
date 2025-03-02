@@ -1,58 +1,3 @@
-async function handleSubmit() {
-    if (!validateCredits()) {
-        alert('Please enter a credit value between 12 and 20');
-        return;  // Stop submission if credits are invalid
-    }
-    // Get values from all inputs
-    const selectedMajor = document.getElementById('major-select').value;
-    const selectedTerm = document.getElementById('term-select').value;
-    const creditHours = document.getElementById('credit-limit').value;
-    const classHistory = document.getElementById('history-input').value.toString();
-
-    // Create an object with the form data
-    const formData = {
-        major: selectedMajor,
-        term: selectedTerm,
-        credits: creditHours,
-        history: classHistory
-    };
-
-    // Log to console to verify data (you can remove this later)
-    console.log('Form Data:', formData);
-    localStorage.setItem('scheduleData', JSON.stringify(formData));
-
-    // Basic validation
-    if (!selectedMajor || !selectedTerm || !creditHours || !classHistory) {
-        alert('Please fill in all fields');
-        return;
-    }
-
-    try {
-        const response = await fetch('/api/submit', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData)
-        });
-
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-
-        const result = await response.json();
-        console.log('Success:', result);
-    } catch (error) {
-        console.error('Error:', error);
-        alert('There was a problem submitting your data');
-    }
-    // Here you can:
-    // 1. Send to backend
-    // 2. Store in localStorage
-    // 3. Process the data
-    return formData;
-}
-
 document.addEventListener('DOMContentLoaded', function() {
      // Add modal HTML to the document
      document.body.insertAdjacentHTML('beforeend', `
@@ -118,3 +63,58 @@ document.addEventListener('DOMContentLoaded', function() {
     const submitButton = document.getElementById('submit-btn');
     submitButton.addEventListener('click', handleSubmit);
 });
+
+async function handleSubmit() {
+    if (!validateCredits()) {
+        alert('Please enter a credit value between 12 and 20');
+        return;  // Stop submission if credits are invalid
+    }
+    // Get values from all inputs
+    const selectedMajor = document.getElementById('major-select').value;
+    const selectedTerm = document.getElementById('term-select').value;
+    const creditHours = document.getElementById('credit-limit').value;
+    const classHistory = document.getElementById('history-input').value.toString();
+
+    // Create an object with the form data
+    const formData = {
+        major: selectedMajor,
+        term: selectedTerm,
+        credits: creditHours,
+        history: classHistory
+    };
+
+    // Log to console to verify data (you can remove this later)
+    console.log('Form Data:', formData);
+    localStorage.setItem('scheduleData', JSON.stringify(formData));
+
+    // Basic validation
+    if (!selectedMajor || !selectedTerm || !creditHours || !classHistory) {
+        alert('Please fill in all fields');
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const result = await response.json();
+        console.log('Success:', result);
+    } catch (error) {
+        console.error('Error:', error);
+        alert('There was a problem submitting your data');
+    }
+    // Here you can:
+    // 1. Send to backend
+    // 2. Store in localStorage
+    // 3. Process the data
+    return formData;
+}
