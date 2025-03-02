@@ -1,0 +1,9 @@
+classes must not be taken
+classes with prerequisites are only eligible if they have taken at least one class  in each of the array of arrays
+classes must not conflict
+classes with the same name and type must not repeat
+if you are taking a lab class, you must follow up with a recitation and a lecture class in the same schedule
+M=monday, T=tuesday, W=wednesday, H=thursday,F=Friday 
+toss those to an ai plus classes that we havent taken and its golden
+for every conflict, calculate each course's score. Score = rating + amount of tags matching user input, then prioritize the class with the higher score on the schedule
+get classes available by invalidating all classes with the same courses as completedCourse array
