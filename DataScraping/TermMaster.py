@@ -33,8 +33,8 @@ class TermMaster:
                 row_data = [cell.text.strip() for cell in cells]
                 if len(row_data) > 5:
                     rows.append(row_data)
-        self.SetClassesModel(rows)
         self.ExtractProfessors(rows)
+        return self.SetClassesModel(rows)
 
     def SetClassesModel(self, classes):
         list_of_classes = []
