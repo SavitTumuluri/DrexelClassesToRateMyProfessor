@@ -42,15 +42,22 @@ classes = [
 #classes = []
 
 @app.route('/', methods=['GET', 'POST'])
-
 def home():
-    result = None
-    
     if request.method == 'POST':
-        user_transcript = request.form['class-history']
+        # Get form data
+        major = request.form.get('major', '')
+        term = request.form.get('term', '')
+        credits = request.form.get('credits', '')
+        user_transcript = request.form.get('class-history', '')
+        
+        # Process the transcript data
         result = parse_transcipts(user_transcript)
+        
+        # Pass the hardcoded classes only for POST requests
+        return render_template('index.html', result=result, classes=classes)
     
-    return render_template('index.html', result = result, classes=classes)
+    # For GET requests, pass an empty list for classes
+    return render_template('index.html', result=None, classes=[])
 
 
 

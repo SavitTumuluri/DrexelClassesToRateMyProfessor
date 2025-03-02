@@ -18,28 +18,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    async function handleSubmit() {
+    async function handleSubmit(e) {
+        e.preventDefault(); // Prevent default form submission
+        
         if (!validateCredits()) {
             alert('Please enter a credit value between 12.0 and 20.0');
             return;  // Stop submission if credits are invalid
         }
-        // Get values from all inputs
-        const selectedMajor = document.getElementById('major-select').value;
-        const selectedTerm = document.getElementById('term-select').value;
-        const creditHours = document.getElementById('credit-limit').value;
-        const classHistory = document.getElementById('history-input').value.toString();
-
-        // Create an object with the form data
-        const formData = {
-            major: selectedMajor,
-            term: selectedTerm,
-            credits: creditHours,
-            history: classHistory
-        };
-
-        // Log to console to verify data
-        console.log('Form Data:', formData);
-        localStorage.setItem('scheduleData', JSON.stringify(formData));
+        
+        // Get the form element
+        const form = document.querySelector('form');
+        
+        // Submit the form
+        form.submit();
     }
 
     // Add modal HTML to the document
