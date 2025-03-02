@@ -6,8 +6,8 @@ summarizer = pipeline("summarization")
 def summarize_course_package(package, professors):
     """
     Given a course package (a list of course sections for a single course) and professor data,
-    this function aggregates review details from a representative section (preferably a lecture)
-    and uses the summarization pipeline to produce a concise summary.
+    this function aggregates all review comments for the relevant professor and uses the summarization
+    pipeline to produce a concise summary.
     """
     # Prefer a lecture section; if none, use the first available section.
     main_section = None
@@ -23,11 +23,19 @@ def summarize_course_package(package, professors):
     prof = next((p for p in professors if p.get("name") == prof_name), None)
     
     if prof:
-        # Build a text block with professor review details.
+        rating = prof.get('rating', 'N/A')
+        # If the professor has multiple comments, aggregate them.
+        # Expecting 'comments' to be a list; if not, fallback to the single 'comment' field.
+        comments = prof.get('comments')
+        if comments and isinstance(comments, list):
+            aggregated_comments = " ".join(comments)
+        else:
+            aggregated_comments = prof.get('comment', 'No comment available.')
+        
         text_to_summarize = (
             f"Professor {prof_name} teaches this course. "
-            f"Rating: {prof.get('rating', 'N/A')}. "
-            f"Review: {prof.get('comment', 'No comment available.')}"
+            f"Rating: {rating}. "
+            f"Reviews: {aggregated_comments}"
         )
     else:
         text_to_summarize = "No professor information available for this course package."
@@ -51,7 +59,6 @@ def summarize_schedule(final_schedule, professors):
 
 if __name__ == "__main__":
     # Example usage for testing the summarizer independently.
-    # Sample final_schedule: a list of course packages where each package is a list of sections.
     final_schedule = [
         [
             {"course_code": "CS164", "ClassType": "Lecture", "Professor": "Brian L Stuart"},
@@ -63,21 +70,25 @@ if __name__ == "__main__":
         ]
     ]
     
-    # Sample professor data.
     professors = [
         {
             "name": "Brian L Stuart",
             "rating": 3.5,
-            "comment": "A decent professor, though his lectures can be a bit confusing at times."
+            "comments": [
+                "A decent professor, though his lectures can be a bit confusing at times.",
+                "He is very knowledgeable but sometimes uses overly technical language."
+            ]
         },
         {
             "name": "Daniel W Moix",
             "rating": 1,
-            "comment": "Honestly one of the biggest regrets I have taking this professor. His lectures are literally pointless and a waste of time."
+            "comments": [
+                "Honestly one of the biggest regrets I have taking this professor.",
+                "His lectures are literally pointless and a waste of time."
+            ]
         }
     ]
     
-    # Generate and print summaries.
     summaries = summarize_schedule(final_schedule, professors)
     for course, summary in summaries.items():
         print(f"Course: {course}\nSummary: {summary}\n")
