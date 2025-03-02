@@ -45,20 +45,19 @@
                        placeholder="Credit Hours"
                        required>
             </div>
-            <div class="class-history">
-                <div class="history-header">
+            <form method="POST">
+                <div class="class-history">
                     <label for="history-input">Past Class History:</label>
-                    <a href="#" class="help-link" id="history-help">How to get this?</a>
+                    <textarea id="history-input" 
+                            name="class-history" 
+                            placeholder="Paste your class history here..."
+                            rows="10"></textarea>
                 </div>
-                <textarea id="history-input" 
-                        name="class-history" 
-                        placeholder="Paste your class history here..."
-                        rows="10"></textarea>
-            </div>
-
-            <div class="submit-container">
-                <button type="submit" id="submit-btn">Generate Schedule</button>
-            </div>
+    
+                 <div class="submit-container">
+                    <button type="submit" id="submit-btn">Generate Schedule</button>
+                </div> 
+            </form>
         </div>
         
         <div class="center-section">
