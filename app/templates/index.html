@@ -64,15 +64,27 @@
         </div>
         
         <div class="center-section">
+            <!--schedule-->
+            
+            {% for class in classes %}
+            <div class="class-info">
+                <h2>{{ class['course_code'] }}</h2>
+                <p><strong>Class Time:</strong> {{ class['ClassTime'] }}</p>
+                <p><strong>Weekday:</strong> {{ class['WeekDay'] }}</p>
+                <p><strong>Professor:</strong> {{ class['Professor'] }}</p>
+                <p><strong>Class Type:</strong> {{ class['ClassType'] }}</p>
+            </div>
+            {% endfor %}
         </div>
 
         <div class="right-section">
+            <!--
             {% if result is not none %}
                 <div class="result">
                     <h3>Processing Result:</h3>
                     <p>The class history contains {{ result }} lines.</p>
                 </div>
-            {% endif %}
+            {% endif %} -->
         </div>
 
     </main>
