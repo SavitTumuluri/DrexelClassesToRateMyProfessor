@@ -10,7 +10,7 @@ def connect_to_mongo():
         client = MongoClient(config["uri"])
         db = client[config["dbName"]]
 
-        collection = db["csClasses"]
+        collection = db["classes"]
         documents = collection.find()
 
         for doc in documents:
