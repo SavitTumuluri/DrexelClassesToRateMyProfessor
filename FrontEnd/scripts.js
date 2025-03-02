@@ -50,6 +50,47 @@ async function handleSubmit() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+     // Add modal HTML to the document
+     document.body.insertAdjacentHTML('beforeend', `
+        <div class="modal" id="instructionsModal">
+            <div class="modal-content">
+                <span class="close-button" id="closeModal">&times;</span>
+                <h2>How to Get Your Class History</h2>
+                <div class="instructions">
+                    <p>Follow these steps to get your class history:</p>
+                    <ol>
+                        <li>Go to your DegreeWorks page and click on the three dots on the right-hand side of the page.</li>
+                        <img src="path/to/your/image1.png" alt="Step 1">
+                        <li>Step 2 with description</li>
+                        <img src="path/to/your/image2.png" alt="Step 2">
+                        <li>Step 3 with description</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    `);
+
+    // Modal functionality
+    const helpLink = document.getElementById('history-help');
+    const modal = document.getElementById('instructionsModal');
+    const closeButton = document.getElementById('closeModal');
+
+    helpLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        modal.style.display = 'block';
+    });
+
+    closeButton.addEventListener('click', function() {
+        modal.style.display = 'none';
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+    
     const creditInput = document.getElementById('credit-limit');
     
     function validateCredits() {
