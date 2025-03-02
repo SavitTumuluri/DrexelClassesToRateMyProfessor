@@ -1,10 +1,8 @@
 import datetime
-import nltk
-from nltk.sentiment import SentimentIntensityAnalyzer
+from transformers import pipeline
 
-# Download the Vader lexicon if not already present.
-nltk.download('vader_lexicon')
-sia = SentimentIntensityAnalyzer()
+# Initialize the Hugging Face sentiment analysis pipeline.
+sentiment_analyzer = pipeline("sentiment-analysis")
 
 def check_prerequisites(course_prereqs, completed_courses):
     """
@@ -14,7 +12,7 @@ def check_prerequisites(course_prereqs, completed_courses):
     where the first list requires CS260 and the second list means at least one of CS281 or ECEC355 must be completed.
     """
     for group in course_prereqs:
-        # If the first element is a list, then treat it as alternatives (OR condition)
+        # If the first element is a list, treat it as alternatives (OR condition)
         if isinstance(group[0], list):
             if not any(req in completed_courses for req in group[0]):
                 return False
@@ -28,17 +26,20 @@ def calculate_score(professor_rating, comment, user_tags):
     Compute the overall score for a course by combining:
       - The professor's numeric rating.
       - The count of user-supplied keywords (from user_tags) found in the professor's comment.
-      - The compound sentiment score from Vader analysis of the professor's comment.
+      - The sentiment score from an AI-based sentiment analysis of the professor's comment.
     
-    The compound sentiment score is in the range [-1, 1] (with positive being more positive).
+    Here, we use Hugging Face's transformers pipeline for sentiment analysis.
+    The pipeline returns a label and a score. We convert this into a compound value:
+      * If label is "POSITIVE", compound = score (range [0, 1])
+      * If label is "NEGATIVE", compound = -score (range [-1, 0])
     """
-    # Analyze sentiment from the professor's comment
-    sentiment_compound = sia.polarity_scores(comment)['compound']
-    
+    result = sentiment_analyzer(comment)[0]
+    sentiment_compound = result["score"] if result["label"] == "POSITIVE" else -result["score"]
+
     # Count how many user tags appear in the comment (case-insensitive)
     match_count = sum(1 for tag in user_tags if tag.lower() in comment.lower())
-    
-    # Return the combined score. You can adjust weighting factors if needed.
+
+    # Combine the professor's rating, keyword matches, and sentiment compound.
     return professor_rating + match_count + sentiment_compound
 
 def parse_time(time_str):
@@ -173,19 +174,17 @@ if __name__ == "__main__":
         {"course_code": "CS171", "ClassTime": "09:00 am - 10:50 am", "WeekDay": "T", "Professor": "Daniel W Moix", "ClassType": "Lecture"}
     ]
     
-    # Sample professor data updated to use the API format (only rating, difficulty, comment, and class_name available)
+    # Sample professor data using the API format (rating, comment, and class_name available)
     professors = [
         {
             "name": "Daniel W Moix", 
             "rating": 1, 
-            "difficulty": 5, 
             "comment": "Honestly one of the biggest regrets I have taking this professor. His lectures are literally pointless and a waste of time. The HWs are extremely long and barely correlates to the lectures and he literally takes points off for fun. He is aggressive towards students that ask for help. He doesn't submit grades on time so students are always confused.", 
             "class_name": "CS260"
         },
         {
             "name": "Brian L Stuart", 
             "rating": 3.5, 
-            "difficulty": 3.7, 
             "comment": "A decent professor, though his lectures can be a bit confusing at times.", 
             "class_name": "CS164"
         }
