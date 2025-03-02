@@ -1,13 +1,9 @@
 class Course:
     def __init__(self):
-        self.prerequisite = ""
         self.abbreviation = ""
-        self.creditHours = ""
-        self.courseId = ""
         self.fullName = ""
-
-    def SetId(self, courseId):
-        self.courseId = courseId
+        self.prerequisite = ""
+        self.creditHours = ""
 
     def SetName(self, name):
         self.fullName = name

@@ -33,8 +33,8 @@ class TermMaster:
                 row_data = [cell.text.strip() for cell in cells]
                 if len(row_data) > 5:
                     rows.append(row_data)
-        self.SetClassesModel(rows)
         self.ExtractProfessors(rows)
+        return self.SetClassesModel(rows)
 
     def SetClassesModel(self, classes):
         list_of_classes = []
@@ -56,7 +56,11 @@ class TermMaster:
             else :
                 date = splitDate[0]
                 classTime = splitDate[0]
-            professor = current[8]
+
+            professor = current[10]
+            if ("Dec" in professor):
+                professor = current[12]
+
             newClass = Class.Class(subjectCode=subjectCode, classType=classType, method=method, section=section, crn=crn, name=name, date=date, classTime=classTime, professor=professor)
             list_of_classes.append(newClass)
 
@@ -67,7 +71,9 @@ class TermMaster:
     def ExtractProfessors(self, rows):
         list_of_professors = set()
         for currentClass in rows:
-            possibleProfessor = currentClass[8]
+            possibleProfessor = currentClass[10]
+            if ("Dec" in possibleProfessor):
+                possibleProfessor = currentClass[12]
             if (possibleProfessor != None or possibleProfessor.lower() != "tbd"):
                 list_of_professors.add(possibleProfessor)
         
