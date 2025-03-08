@@ -42,14 +42,13 @@ class RMP:
                 "ratingMetadata": rating_ids
             }
 
-            self.professors_collection.insert_one(professor_doc)
+            #self.professors_collection.insert_one(professor_doc)
 
             list_of_professors.append(professor_doc)
         
         #print(len(list_of_professors))
         json_data = json.dumps(list_of_professors, default=str, indent=4)
         #self.professors_collection.insert_one(json_data)
-
         return json_data
 
     '''professor = ratemyprofessor.get_professor_by_school_and_name(school, "Dimitrios Papadopoulos")

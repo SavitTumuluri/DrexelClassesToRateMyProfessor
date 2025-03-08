@@ -132,11 +132,16 @@ print(se_courses_json)
 with open("se_courses.json", "w") as json_file:
     json_file.write(se_courses_json)
 
-time.sleep(2)
+print("sleeping...")
+time.sleep(4)
+
 '''newRMP = RMP()
 for professorName in list_of_professor_names:
+    print(professorName)
     currentProfessor = newRMP.AddProfessor(profName=professorName)
 
-professor_json = newRMP.GetAllProfessors()'''
+professor_json = newRMP.GetAllProfessors()
+print(professor_json)'''
+
 # Close the WebDriver
 driver.quit()
