@@ -56,7 +56,7 @@ def ParseCourseInfo(courseInfo):
 
 
 # Path to your ChromeDriver
-chrome_driver_path = "C:/Users/Serena Osuagwu/Downloads/chromedriver-win64/chromedriver-win64/chromedriver.exe"
+chrome_driver_path = "chromedriver.exe"
 
 # Initialize the WebDriver
 service = Service(chrome_driver_path)
@@ -74,7 +74,7 @@ driver.get(cs_page)
 # Wait for the page to load (adjust the sleep time as needed)
 time.sleep(5)
 
-list_of_professor_names = []
+list_of_professor_names = set()
 
 # Locate the table by its ID
 table = driver.find_element(By.ID, "sortableTable")
@@ -84,10 +84,11 @@ cs_classes_json = termMasterInstance.ExtractClasses()
 with open("cs_classes.json", "w") as json_file:
     json_file.write(cs_classes_json)
 
-print(cs_classes_json)
 time.sleep(2)
 
-list_of_professor_names.extend(termMasterInstance.professors)
+for each in termMasterInstance.professors:
+    list_of_professor_names.add(each)
+
 
 allCourses = []
 for courseNumber in termMasterInstance.coursesNumber:
@@ -95,14 +96,10 @@ for courseNumber in termMasterInstance.coursesNumber:
     course = ExtractCourseInfo(driver=driver, url=catalogurl)
     allCourses.append(course)
 cs_courses_json = json.dumps([course.__dict__ for course in allCourses], indent=4)
-print(cs_courses_json)
 with open("cs_courses.json", "w") as json_file:
     json_file.write(cs_courses_json)
 
 time.sleep(2)
-
-'''professor_json = RateMyProfessor.GetProfessors()
-print(professor_json)'''
 
 se_page = "https://termmasterschedule.drexel.edu/webtms_du/courseList/SE"  # Replace with the actual URL
 driver.get(se_page)
@@ -115,12 +112,13 @@ se_table = driver.find_element(By.ID, "sortableTable")
 
 secondTermMasterInstance = TermMaster.TermMaster(se_table)
 se_classes_json = secondTermMasterInstance.ExtractClasses()
-print(se_classes_json)
 with open("se_classes.json", "w") as json_file:
     json_file.write(se_classes_json)
 
 time.sleep(2)
-list_of_professor_names.extend(secondTermMasterInstance.professors)
+
+for proff in secondTermMasterInstance.professors:
+    list_of_professor_names.add(proff)
 
 seCourses = []
 for courseNumber in secondTermMasterInstance.coursesNumber:
@@ -128,20 +126,26 @@ for courseNumber in secondTermMasterInstance.coursesNumber:
     newCourse = ExtractCourseInfo(driver=driver, url=catalogurl)
     seCourses.append(newCourse)
 se_courses_json = json.dumps([course.__dict__ for course in seCourses], indent=4)
-print(se_courses_json)
 with open("se_courses.json", "w") as json_file:
     json_file.write(se_courses_json)
 
-print("sleeping...")
+
 time.sleep(4)
 
-'''newRMP = RMP()
+newRMP = RMP()
 for professorName in list_of_professor_names:
-    print(professorName)
     currentProfessor = newRMP.AddProfessor(profName=professorName)
 
 professor_json = newRMP.GetAllProfessors()
-print(professor_json)'''
+with open("profesors.json", "w") as json_file:
+    json_file.write(professor_json)
 
+time.sleep(6)
+
+ratings_json = newRMP.GetAllRatings()
+with open("ratings.json", "w") as json_file:
+    json_file.write(ratings_json)
+
+print("sleeping...")
 # Close the WebDriver
 driver.quit()
