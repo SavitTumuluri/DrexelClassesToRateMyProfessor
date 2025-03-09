@@ -19,7 +19,24 @@ def get_user_choice(collection_name):
 def upload_class_json_to_db():
     client = pymongo.MongoClient(uri)
     db = client[dbName]
-    filename = "cs_classes.json"
+    classes = "cs_classes.json"
     collection = db["classes"]
 
-    get_user_choice(collection)
+    choice = get_user_choice(collection)
+
+    with open(classes, "r", encoding="utf-8") as file:
+        data = json.load(file)
+        if isinstance(data, dict):  # Ensure data is a list of documents
+            data = [data]
+    if choice == 2:
+        print(f"Clearing collection '{collection}'...")
+        collection.delete_many({})
+
+        print(f"Uploading data to '{collection}'...")
+        collection.insert_many(data)
+        print(f"Successfully updated '{collection}'.")
+    
+    client.close()
+    print("\nAll JSON files have been processed")
+
+upload_class_json_to_db()
