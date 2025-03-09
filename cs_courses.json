@@ -1,0 +1,182 @@
+[
+    {
+        "abbreviation": "CS380",
+        "fullName": "Artificial Intelligence",
+        "prerequisite": "CS 260 [Min Grade: C] and CS 270 [Min Grade: C]",
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "",
+        "fullName": "",
+        "prerequisite": null,
+        "creditHours": ""
+    },
+    {
+        "abbreviation": "CS501",
+        "fullName": "Introduction to Programming",
+        "prerequisite": null,
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "CS590",
+        "fullName": "Privacy",
+        "prerequisite": "CS 504 [Min Grade: C]",
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "CS457",
+        "fullName": "Data Structures and Algorithms I",
+        "prerequisite": "CS 260 [Min Grade: C] and CS 270 [Min Grade: C] and CS 277 [Min Grade: C] and (MATH 221 [Min Grade: C] or MATH 222 [Min Grade: C])",
+        "creditHours": "4.0"
+    },
+    {
+        "abbreviation": "CS583",
+        "fullName": "Introduction to Computer Vision",
+        "prerequisite": "CS 504 [Min Grade: C]",
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "CS171",
+        "fullName": "Computer Programming I",
+        "prerequisite": null,
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "CS277",
+        "fullName": "Algorithms and Analysis",
+        "prerequisite": "CS 260 [Min Grade: C] and CS 270 [Min Grade: C] and MATH 221 [Min Grade: C]",
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "CS377",
+        "fullName": "Software Security",
+        "prerequisite": "CS 283 [Min Grade: C] or ECEC 353 [Min Grade: D]",
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "CS375",
+        "fullName": "Web Development",
+        "prerequisite": "CS 265 [Min Grade: C]",
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "CS270",
+        "fullName": "Mathematical Foundations of Computer Science",
+        "prerequisite": "CS 172 [Min Grade: C] or CS 265 [Min Grade: C] or ECE 105 [Min Grade: D] or ECEC 201 [Min Grade: D]",
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "CS164",
+        "fullName": "Introduction to Computer Science",
+        "prerequisite": null,
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "CS265",
+        "fullName": "Advanced Programming Tools and Techniques",
+        "prerequisite": "CS 172 [Min Grade: C] or ECE 105 [Min Grade: D] or ECEC 201 [Min Grade: D]",
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "CS172",
+        "fullName": "Computer Programming II",
+        "prerequisite": "CS 171 [Min Grade: C] or CS 175 [Min Grade: C]",
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "",
+        "fullName": "",
+        "prerequisite": null,
+        "creditHours": ""
+    },
+    {
+        "abbreviation": "CS345",
+        "fullName": "Computer Game Design and Development",
+        "prerequisite": "CS 265 [Min Grade: C]",
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "CS461",
+        "fullName": "Database Systems",
+        "prerequisite": "CS 260 [Min Grade: C]",
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "CS503",
+        "fullName": "Systems Basics",
+        "prerequisite": "CS 501 [Min Grade: C] (Can be taken Concurrently)",
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "CS570",
+        "fullName": "Programming Foundations",
+        "prerequisite": null,
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "CS260",
+        "fullName": "Data Structures",
+        "prerequisite": "CS 265 [Min Grade: C]",
+        "creditHours": "4.0"
+    },
+    {
+        "abbreviation": "CS150",
+        "fullName": "Computer Science Principles",
+        "prerequisite": null,
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "CS591",
+        "fullName": "Artificial Intelligence and Machine Learning Capstone I",
+        "prerequisite": "(CS 510 [Min Grade: C] and CS 613 [Min Grade: C] and CS 615 [Min Grade: C]) or (CS 614 [Min Grade: C] and INFO 629 [Min Grade: C])",
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "CS387",
+        "fullName": "Game AI Development",
+        "prerequisite": "CS 260 [Min Grade: C] and CS 380 [Min Grade: C]",
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "CS281",
+        "fullName": "Systems Architecture",
+        "prerequisite": "(CS 270 [Min Grade: C] or ECE 200 [Min Grade: D]) and (CS 172 [Min Grade: C] or ECEC 201 [Min Grade: D] or ECE 105 [Min Grade: D])",
+        "creditHours": "4.0"
+    },
+    {
+        "abbreviation": "CS361",
+        "fullName": "Concurrent Programming",
+        "prerequisite": "CS 260 [Min Grade: C] and (CS 281 [Min Grade: C] or ECEC 355 [Min Grade: D])",
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "CS430",
+        "fullName": "Computer Graphics",
+        "prerequisite": "CS 260 [Min Grade: C] and (MATH 201 [Min Grade: C] or MATH 261 [Min Grade: C] or ENGR 231 [Min Grade: D])",
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "CS472",
+        "fullName": "Computer Networks: Theory, Applications and Programming",
+        "prerequisite": "CS 361 [Min Grade: D] or CS 283 [Min Grade: C] or ECEC 353 [Min Grade: D]",
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "CS521",
+        "fullName": "Data Structures and Algorithms I",
+        "prerequisite": "CS 504 [Min Grade: C]",
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "CS613",
+        "fullName": "Machine Learning",
+        "prerequisite": "CS 504 [Min Grade: C]",
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "CS510",
+        "fullName": "Introduction to Artificial Intelligence",
+        "prerequisite": "CS 504 [Min Grade: C]",
+        "creditHours": "3.0"
+    }
+]

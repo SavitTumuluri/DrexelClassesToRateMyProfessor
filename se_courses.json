@@ -1,0 +1,68 @@
+[
+    {
+        "abbreviation": "SE570",
+        "fullName": "Agile Software Development Process",
+        "prerequisite": "CS 504 [Min Grade: C]",
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "SE410",
+        "fullName": "Software Evolution",
+        "prerequisite": "CS 260 [Min Grade: C]",
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "SE201",
+        "fullName": "Introduction to Software Engineering and Development",
+        "prerequisite": "CS 172 [Min Grade: C]",
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "SE638",
+        "fullName": "Software Project Management",
+        "prerequisite": "INFO 620 [Min Grade: C] or CS 502 [Min Grade: C] or SE 630 [Min Grade: C] or INFO 532 [Min Grade: C]",
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "SE575",
+        "fullName": "Software Design",
+        "prerequisite": "CS 504 [Min Grade: C]",
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "SE420",
+        "fullName": "Open Source Software Engineering",
+        "prerequisite": "CS 260 [Min Grade: C]",
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "SE320",
+        "fullName": "Software Verification and Validation",
+        "prerequisite": "CS 260 [Min Grade: C] and (SE 181 [Min Grade: C] or SE 201 [Min Grade: C])",
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "SE691",
+        "fullName": "Software Studio",
+        "prerequisite": "SE 570 [Min Grade: C]",
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "SE210",
+        "fullName": "Software Specification and Design I",
+        "prerequisite": "CS 172 [Min Grade: C]",
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "SE627",
+        "fullName": "Requirements Engineering and Management",
+        "prerequisite": "INFO 620 [Min Grade: C] or CS 502 [Min Grade: C] or INFO 600 [Min Grade: C]",
+        "creditHours": "3.0"
+    },
+    {
+        "abbreviation": "SE310",
+        "fullName": "Software Architecture I",
+        "prerequisite": "CS 265 [Min Grade: C] and CS 260 [Min Grade: C] and (SE 181 [Min Grade: C] or SE 201 [Min Grade: C])",
+        "creditHours": "3.0"
+    }
+]
