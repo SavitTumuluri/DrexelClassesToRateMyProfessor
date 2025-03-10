@@ -68,69 +68,66 @@ DrexelSignIn.SignIn(driver=driver)
 # Navigate to the webpage
 
 
-cs_page = "https://termmasterschedule.drexel.edu/webtms_du/courseList/CS"  # Replace with the actual URL
-driver.get(cs_page)
-
-# Wait for the page to load (adjust the sleep time as needed)
+driver.get("https://termmasterschedule.drexel.edu/webtms_du/")
 time.sleep(5)
 
+fall_quarter_link = driver.find_element(By.LINK_TEXT, "Fall Quarter 24-25")
+fall_quarter_link.click()
+time.sleep(3)
+
+cci_link = driver.find_element(By.LINK_TEXT, "Col of Computing & Informatics")
+cci_link.click()
+time.sleep(3)
+
+subjects_table = driver.find_element(By.CSS_SELECTOR, "table.collegePanel")
+subject_links = subjects_table.find_elements(By.TAG_NAME, "a")
+
+subjects_data = []
+for link in subject_links:
+    subject_name = link.text.strip()               # e.g. "Computer Science (CS)"
+    subject_href = link.get_attribute("href")      # e.g. /webtms_du/courseList/CS
+    if subject_href.startswith("/"):
+        # Make it absolute if necessary
+        subject_href = "https://termmasterschedule.drexel.edu" + subject_href
+    subjects_data.append((subject_name, subject_href))
+
 list_of_professor_names = set()
+all_courses = []
 
-# Locate the table by its ID
-table = driver.find_element(By.ID, "sortableTable")
+for (subj_name, subj_url) in subjects_data:
+    print(f"Processing subject: {subj_name} => {subj_url}")
+    driver.get(subj_url)
+    time.sleep(3)
 
-termMasterInstance = TermMaster.TermMaster(table)
-cs_classes_json = termMasterInstance.ExtractClasses()
-with open("cs_classes.json", "w") as json_file:
-    json_file.write(cs_classes_json)
+    # Some subjects may have no courses posted, so wrap in try/except
+    try:
+        table = driver.find_element(By.ID, "sortableTable")
+    except:
+        print(f"No table found for subject {subj_name}, skipping.")
+        continue
 
-time.sleep(2)
+    termMasterInstance = TermMaster.TermMaster(table)
+    # Extract JSON if you want to store it by subject
+    subject_classes_json = termMasterInstance.ExtractClasses()
 
-for each in termMasterInstance.professors:
-    list_of_professor_names.add(each)
+    # Collect professor names
+    for prof in termMasterInstance.professors:
+        list_of_professor_names.add(prof)
 
+    # 6) For each course, get more info from the Catalog
+    for courseNumber in termMasterInstance.coursesNumber:
+        catalog_url = f"https://catalog.drexel.edu/search/?P={courseNumber}"
+        extracted_course = ExtractCourseInfo(driver, catalog_url)
+        # If extraction succeeded, store it
+        if extracted_course:
+            all_courses.append(extracted_course)
 
-allCourses = []
-for courseNumber in termMasterInstance.coursesNumber:
-    catalogurl = f"https://catalog.drexel.edu/search/?P={courseNumber}"
-    course = ExtractCourseInfo(driver=driver, url=catalogurl)
-    allCourses.append(course)
-cs_courses_json = json.dumps([course.__dict__ for course in allCourses], indent=4)
-with open("cs_courses.json", "w") as json_file:
+# Once all subjects are processed, dump the combined courses to JSON
+cs_courses_json = json.dumps([course.__dict__ for course in all_courses], indent=4)
+with open("all_computing_informatics_courses.json", "w") as json_file:
     json_file.write(cs_courses_json)
 
 time.sleep(2)
-
-se_page = "https://termmasterschedule.drexel.edu/webtms_du/courseList/SE"  # Replace with the actual URL
-driver.get(se_page)
-
-# Wait for the page to load (adjust the sleep time as needed)
-time.sleep(5)
-
-# Locate the table by its ID
-se_table = driver.find_element(By.ID, "sortableTable")
-
-secondTermMasterInstance = TermMaster.TermMaster(se_table)
-se_classes_json = secondTermMasterInstance.ExtractClasses()
-with open("se_classes.json", "w") as json_file:
-    json_file.write(se_classes_json)
-
-time.sleep(2)
-
-for proff in secondTermMasterInstance.professors:
-    list_of_professor_names.add(proff)
-
-seCourses = []
-for courseNumber in secondTermMasterInstance.coursesNumber:
-    catalogurl = f"https://catalog.drexel.edu/search/?P={courseNumber}"
-    newCourse = ExtractCourseInfo(driver=driver, url=catalogurl)
-    seCourses.append(newCourse)
-se_courses_json = json.dumps([course.__dict__ for course in seCourses], indent=4)
-with open("se_courses.json", "w") as json_file:
-    json_file.write(se_courses_json)
-
-
-time.sleep(4)
 
 newRMP = RMP()
 for professorName in list_of_professor_names:
